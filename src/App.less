@@ -2,6 +2,47 @@ html {
   font-size: 62.5%;
 }
 
-html body #root .app {
+body {
+  margin: 0;
+  padding: 0;
+}
+
+html body #root .App {
   min-height: 100vh;
+  // min-width: 968px;
+  background-color: aliceblue;
+}
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.flex {
+  display: flex;
+}
+
+.flex-column {
+  display: flex;
+  flex-direction: column;
+}
+
+.flex-1 {
+  flex: 1;
+}
+
+.between {
+  justify-content: space-between;
+}
+
+
+.row-center {
+  justify-content: center;
+}
+
+.column-center {
+  align-items: center;
+}
+
+.pointer {
+  cursor: pointer;
 }
