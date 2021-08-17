@@ -7,6 +7,7 @@ import * as _ from 'lodash';
 import { CSSTransition } from 'react-transition-group';
 
 import './index.less';
+import { useSticky } from "utils/hooks";
 
 const useStyles = makeStyles((theme) => ({
   margin: {
@@ -21,21 +22,7 @@ export const Header = () => {
 
   const classes = useStyles();
 
-  const [isSticky, setSticky] = useState(false);
-
-  useEffect(() => {
-    const scroll = () => {
-      if (document.documentElement.scrollTop) {
-        setSticky(true);
-      } else {
-        setSticky(false);
-      }
-    }
-    document.addEventListener('scroll',  scroll);
-    return () => {
-      window.removeEventListener('scroll',_.throttle(scroll,300))
-    }
-  }, [])
+  const { isSticky } = useSticky();
 
 
   const [menu, setMenu] = useState([
@@ -49,8 +36,8 @@ export const Header = () => {
   }
 
   return (
-    <CSSTransition in={isSticky} timeout={200} classNames="head">
-      <header>
+    <header >
+      <div className={`header-wrap container ${isSticky ? 'fixed' : ''}` }>
         <Container className={`flex between container`} >
           <Logo className=""></Logo>
           <HeadRight className=''>
@@ -64,10 +51,10 @@ export const Header = () => {
               </Button>
             </Menu>
           </HeadRight>
-
         </Container>
-      </header>
-    </CSSTransition>
+      </div>
+
+    </header>
 
   )
 }
