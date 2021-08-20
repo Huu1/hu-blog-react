@@ -8,6 +8,7 @@ import { CSSTransition } from 'react-transition-group';
 
 import './index.less';
 import { useSticky } from "utils/hooks";
+import AlertDialogSlide from "components/Auth/index";
 
 const useStyles = makeStyles((theme) => ({
   margin: {
@@ -24,9 +25,10 @@ export const Header = () => {
 
   const { isSticky } = useSticky();
 
+  const [isOpenLogin, setIsOpenLogin] = useState(false);
 
   const [menu, setMenu] = useState([
-    'home', 'about', 'me', 'me', 'apple', 'orange'
+    'Home', 'Tags', 'Author', 'Music',
   ]);
 
   const LiGroup = () => {
@@ -35,9 +37,18 @@ export const Header = () => {
     )
   }
 
+  const openLoginModal = () => {
+    setIsOpenLogin(true);
+  }
+
+  const closeLoginModal = () => {
+    setIsOpenLogin(false);
+
+  }
+
   return (
-    <header >
-      <div className={`header-wrap container ${isSticky ? 'fixed' : ''}` }>
+    <header className={`${isSticky ? 'border' : 'border'}`} >
+      <div className={`header-wrap container ${isSticky ? 'fixed' : ''}`}>
         <Container className={`flex between container`} >
           <Logo className=""></Logo>
           <HeadRight className=''>
@@ -46,13 +57,15 @@ export const Header = () => {
                 LiGroup()
               }
               <Button variant="outlined" color='primary' className={classes.margin}>注册</Button>
-              <Button variant="contained" className={classes.margin} color="secondary">
+              <Button onClick={openLoginModal} variant="contained" className={classes.margin} color="secondary">
                 登录
               </Button>
             </Menu>
           </HeadRight>
         </Container>
       </div>
+
+      <AlertDialogSlide open={isOpenLogin} modalClose={closeLoginModal} />
 
     </header>
 

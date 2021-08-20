@@ -3,11 +3,14 @@ import ReactDOM from 'react-dom';
 import 'App.less';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
+import { AppProviders } from 'context';
 
 ReactDOM.render(
-  <React.StrictMode>
+  // <React.StrictMode>
+  <AppProviders>
     <App />
-  </React.StrictMode>,
+  </AppProviders>,
+  // </React.StrictMode>,
   document.getElementById("root")
 )
 
