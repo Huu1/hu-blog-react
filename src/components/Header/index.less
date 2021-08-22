@@ -35,8 +35,34 @@ header {
 }
 
 .fixed{
-  padding: .35rem;
+  padding: .35rem 0;
 }
 .border {
   border-bottom: 1px solid #E8E9EB;
+}
+
+.hover-underline-animation {
+  display: inline-block;
+  position: relative;
+  color: #1976d2;
+  text-decoration: none;
+}
+
+.hover-underline-animation:after {
+  content: '';
+  position: absolute;
+  width: 100%;
+  transform: scaleX(0);
+  height: 4px;
+  bottom: 2px;
+  left: 0;
+  background-color: #4791db;
+  opacity: .8;
+  transform-origin: bottom right;
+  transition: transform 0.25s ease-out;
+}
+
+.hover-underline-animation:hover:after {
+  transform: scaleX(1);
+  transform-origin: bottom left;
 }

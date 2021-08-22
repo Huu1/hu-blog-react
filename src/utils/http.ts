@@ -1,6 +1,7 @@
 import qs from "qs";
 import * as auth from "./auth-provider";
 import { useAuth } from "context/auth-provider";
+import { encode } from 'js-base64';
 
 const apiUrl = process.env.REACT_APP_API_URL;
 
@@ -19,7 +20,7 @@ export const http = async (endpoint: string, { data, token, headers, ...costomCo
   const config = {
     method: 'GET',
     headers: {
-      Authorization: token ? `Bearer ${token}` : '',
+      Authorization: token ? `Basic ${encode(token+':')}` : '',
       'Content-Type': data ? 'application/json' : ''
     },
     ...costomConfig
@@ -35,7 +36,7 @@ export const http = async (endpoint: string, { data, token, headers, ...costomCo
         // 无权限
         // await auth.logout();
         // window.location.reload();
-        // return Promise.reject({ messgae: '请重新登录' })
+        return Promise.reject({ messgae: '请重新登录' })
       }
 
       const data = await response.json()

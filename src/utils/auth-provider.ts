@@ -7,13 +7,13 @@ const localStorageKey = "__auth_provider_token__";
 export const getToken = () => window.localStorage.getItem(localStorageKey);
 
 // 存token到本地
-export const handleUserResponse = ({ token }: { token: any }) => {
+export const handleUserResponse = ({ token ,user}: { token: any ,user:any}) => {
   window.localStorage.setItem(localStorageKey, token || "");
-  return undefined;
+  return {...user,token};
 };
 
 export const login = (data: { email: string; password: string }) => {
-  return fetch(`${apiUrl}/api/v1/admin/login`, {
+  return fetch(`${apiUrl}/admin/login`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -21,10 +21,10 @@ export const login = (data: { email: string; password: string }) => {
     body: JSON.stringify(data),
   }).then(async (response) => {
     if (response.ok) {
-      // return handleUserResponse(await response.json());
       const { errorCode, data } = await response.json();
       if (errorCode === 0) {
-        return handleUserResponse(data)
+        const { admin: user, token } = data;
+        return handleUserResponse({ user, token })
       }
     } else {
       return Promise.reject(await response.json());
@@ -33,7 +33,7 @@ export const login = (data: { email: string; password: string }) => {
 };
 
 export const register = (data: { email: string; password: string }) => {
-  return fetch(`${apiUrl}/api/v1/admin/register`, {
+  return fetch(`${apiUrl}/admin/register`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",

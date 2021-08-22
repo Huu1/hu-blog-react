@@ -1,51 +1,31 @@
 
+import Home from "pages/home";
+import { Write } from "pages/article/Write";
 import React from "react";
-import { Header } from "components/Header";
-import { ArticleBrief } from "components/Article/ArticleDetail";
-import styled from "@emotion/styled";
-import { ActionCard } from "components/ActionCard";
-
-
+import {
+  BrowserRouter as Router,
+  Switch,
+  Route,
+  Link,
+  useHistory,
+  useLocation,
+  useParams
+} from "react-router-dom";
+import { NotFound } from "components/NotFound/404";
 
 function App() {
   return (
     <div className="App">
-      <Header />
-      <Main className="content container" style={{ marginTop: '150px' }}>
-        <MainContent>
-          {
-            [1, 1, 1, 1, 1, 11,].map((i: any, index: number) => {
-              return <ArticleBrief key={index} />
-            })
-          }
-        </MainContent>
-        {/* <MainSide>
-          <ActionCard />
-          <ActionCard />
-        </MainSide> */}
-      </Main>
-      <Footer />
+      <Router>
+        <Switch >
+          <Route exact path="/" children={<Home />} />
+          <Route exact path="/write/:id" children={<Write />} />
+          <Route path="/*" children={<NotFound />} />
+          {/* <Route path="/img/:id" children={<ImageView />} /> */}
+        </Switch>
+      </Router>
     </div>
   );
 }
 
 export default App;
-
-const Main = styled.main`
-  display: flex;
-`
-
-const MainContent = styled.aside`
-  flex: 1;
-`
-const MainSide = styled.div`
-  margin-left: 40px;
-  width: 300px;
-  /* outline: 1px solid skyblue; */
-`
-
-const Footer = styled.footer`
-  height: 150px;
-  margin-top: 20px;
-  background-color: black;
-`

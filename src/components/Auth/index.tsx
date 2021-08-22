@@ -26,7 +26,8 @@ export interface IUser {
   email: string;
   password: string;
   confirm?: string;
-  nickname?:string
+  nickname?: string;
+  avatar?:string;
 }
 
 function reducer(state: IUser, action: { type: string, payload?: any }) {
@@ -48,8 +49,8 @@ function reducer(state: IUser, action: { type: string, payload?: any }) {
 }
 
 const loginInitState: IUser = {
-  email: '',
-  password: ''
+  email: 'hy@qq.com',
+  password: 'a123456'
 }
 const registerInitState: IUser = {
   email: '',
@@ -61,10 +62,9 @@ const registerInitState: IUser = {
 export default function Auth(props: ILoginModal) {
   const { modalClose, open } = props;
 
-  const { login ,register} = useAuth();
+  const { login, register } = useAuth();
 
-  const { run, isLoading } = useAsync();
-
+  const { run, isLoading, isSuccess ,data} = useAsync();
 
   const [isLogin, setIslogin] = useState(true);
 
@@ -77,7 +77,8 @@ export default function Auth(props: ILoginModal) {
 
   const toLogin = async () => {
     try {
-      await run(login(loginState));
+      let a= await run(login(loginState));
+      Promise.resolve().then(()=>modalClose())
     } catch (error) {
       console.log(error);
     }
@@ -129,7 +130,7 @@ export default function Auth(props: ILoginModal) {
           <Button onClick={modalClose} color="primary">
             取消
           </Button>
-          <Button onClick={action} color="primary" >
+          <Button onClick={action} color="primary" disabled={isLoading}>
             {
               isLogin ? "登录" : "注册"
             }

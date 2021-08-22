@@ -23,9 +23,20 @@ export const useSticky = () => {
   return { isSticky }
 }
 
-const useMount = (callback: Function = () => { }) => {
+export const useMount = (callback: Function = () => { }) => {
   useEffect(() => {
     callback()
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
+}
+
+export const useDebounce = <V>(param: V, delay: number) => {
+  const [value, setValue] = useState(param)
+  useEffect(() => {
+    const id = setTimeout(() => {
+      setValue(param)
+    }, delay);
+    return () => clearTimeout(id)
+  }, [param, delay])
+  return value
 }

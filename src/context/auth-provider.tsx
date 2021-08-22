@@ -2,10 +2,10 @@ import React, { ReactNode, useContext } from "react";
 import * as auth from 'utils/auth-provider';
 import { User } from "types";
 import { http } from "utils/http";
-import { useMount } from "../util";
 import { useAsync } from "utils/useAsync";
 import { log } from "console";
 import { IUser } from "components/Auth";
+import { useMount } from "utils/hooks";
 // import { FullPageError, FullPageLoading } from "components/lib";
 
 interface AuthForm extends IUser {
@@ -16,8 +16,10 @@ const bootstrapUser = async () => {
   let user = null;
   const token = auth.getToken();
   if (token) {
-    // const data = await http('me', { token })
-    // user = data.user;
+    const { errorCode, data } = await http('admin/me', { token });
+    if (errorCode === 0) {
+      user = { ...data, token };
+    }
   }
   return user;
 }
@@ -36,14 +38,14 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
   const { data: user, error, isLoading, isIdel, isError, run, setData: setUser } = useAsync<User | null>()
 
-  const login = (form: AuthForm) => auth.login(form).then()
-  const register = (form: AuthForm) => auth.register(form).then()
+  const login = (form: AuthForm) => auth.login(form).then(setUser)
+  const register = (form: AuthForm) => auth.register(form).then(setUser)
   const logout = () => auth.logout().then(() => setUser(null))
-  
+
   useMount(() => {
     run(bootstrapUser())
   })
-  
+
   if (isIdel || isLoading) {
     // return (
     //   <FullPageLoading />
