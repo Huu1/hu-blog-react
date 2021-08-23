@@ -21,7 +21,6 @@ function App() {
           <Route exact path="/" children={<Home />} />
           <Route exact path="/write/:id" children={<Write />} />
           <Route path="/*" children={<NotFound />} />
-          {/* <Route path="/img/:id" children={<ImageView />} /> */}
         </Switch>
       </Router>
     </div>

@@ -16,11 +16,11 @@ interface Config extends RequestInit {
  * @param param1 请求设置
  * @returns 
  */
-export const http = async (endpoint: string, { data, token, headers, ...costomConfig }: Config ={}) => {
+export const http = async (endpoint: string, { data, token, headers, ...costomConfig }: Config = {}) => {
   const config = {
     method: 'GET',
     headers: {
-      Authorization: token ? `Basic ${encode(token+':')}` : '',
+      Authorization: token ? `Basic ${encode(token + ':')}` : `Basic ${encode(auth.getToken() + ':')}`,
       'Content-Type': data ? 'application/json' : ''
     },
     ...costomConfig

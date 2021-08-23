@@ -15,6 +15,7 @@ import qs from "qs";
 import { useCallback } from "react";
 import { useDataApi } from "utils/useApi";
 import { createStyles, FormControl, InputLabel, makeStyles, MenuItem, Select, Theme } from "@material-ui/core";
+import DraftList from "./draft";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -137,27 +138,10 @@ export function Write() {
     <div className="">
       <WriterTopBar loading={isLoading} title={title} onTitleChange={onTitleChange} />
       <div className='flex'>
-        <div className='side'>
-          <FormControl className={classes.formControl}>
-            <InputLabel id="demo-simple-select-label">分类</InputLabel>
-            <Select
-              labelId="demo-simple-select-label"
-              id="demo-simple-select"
-            >
-              <MenuItem value="">
-                <em>默认</em>
-              </MenuItem>
-              <MenuItem value={10}>分类1</MenuItem>
-              <MenuItem value={10}>分类2</MenuItem>
-              <MenuItem value={10}>分类3</MenuItem>
-            </Select>
-          </FormControl>
-        </div>
         <div className="edit-wrap">
           <div id='vditor' style={{ height: '100%' }}></div>
         </div>
       </div>
-
     </div>
   );
 }

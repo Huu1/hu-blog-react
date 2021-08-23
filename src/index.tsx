@@ -4,12 +4,15 @@ import 'App.less';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 import { AppProviders } from 'context';
-
+import { Provider } from 'react-redux';
+import store from "./store";
 ReactDOM.render(
   // <React.StrictMode>
-  <AppProviders>
-    <App />
-  </AppProviders>,
+  <Provider store={store}>
+    <AppProviders>
+      <App />
+    </AppProviders>
+  </Provider>,
   // </React.StrictMode>,
   document.getElementById("root")
 )

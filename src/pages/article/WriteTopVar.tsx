@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { createStyles, createTheme, makeStyles, Theme } from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
@@ -15,6 +15,9 @@ import styled from '@emotion/styled';
 import DeleteIcon from '@material-ui/icons/Delete';
 import { useHistory } from 'react-router-dom';
 import { UserAvatar } from 'components/UseAvatar';
+import DraftList from './draft';
+import { useDispatch, useSelector } from 'react-redux';
+import { delDrafts, fetchDrafts, selectAllDrafts } from 'store/feature/draftSlice';
 
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -44,6 +47,29 @@ export default function WriterTopBar(props: { title: string, onTitleChange: (val
   const classes = useStyles();
   const { user } = useAuth();
   const history = useHistory()
+
+  const [open, setOpen] = useState(false);
+  const handleClose = () => {
+    setOpen(false);
+  }
+
+  const dispatch = useDispatch();
+  const drafts = useSelector(selectAllDrafts);
+
+  const viewDraft = () => {
+    if (drafts && drafts.length) {
+      setOpen(true);
+    } else {
+      dispatch(fetchDrafts(
+        setOpen(true)
+      ))
+    }
+  }
+
+  const onDelHandle = (id: string) => {
+    dispatch(delDrafts({ id }))
+  }
+
   return (
     <div className={classes.root} >
       <ThemeProvider theme={theme} >
@@ -65,6 +91,7 @@ export default function WriterTopBar(props: { title: string, onTitleChange: (val
                 color="default"
                 className={classes.menuButton}
                 startIcon={<DeleteIcon />}
+                onClick={viewDraft}
               >
                 草稿箱
               </Button>
@@ -78,6 +105,9 @@ export default function WriterTopBar(props: { title: string, onTitleChange: (val
 
         </AppBar>
       </ThemeProvider>
+
+
+      <DraftList open={open} onHandleClose={handleClose} onDelHandle={onDelHandle} data={drafts} />
     </div>
   );
 }
