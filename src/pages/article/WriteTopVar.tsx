@@ -18,6 +18,7 @@ import { UserAvatar } from 'components/UseAvatar';
 import DraftList from './draft';
 import { useDispatch, useSelector } from 'react-redux';
 import { delDrafts, fetchDrafts, selectAllDrafts } from 'store/feature/draftSlice';
+import PublishArticle from './publish';
 
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -49,6 +50,10 @@ export default function WriterTopBar(props: { title: string, onTitleChange: (val
   const history = useHistory()
 
   const [open, setOpen] = useState(false);
+
+
+  const [openPublish, setPublish] = useState<boolean>(false);
+
   const handleClose = () => {
     setOpen(false);
   }
@@ -96,14 +101,16 @@ export default function WriterTopBar(props: { title: string, onTitleChange: (val
                 草稿箱
               </Button>
               <Button variant="contained"
-                color="secondary" className={classes.menuButton}>发布文章</Button>
+                color="secondary" className={classes.menuButton}
+                onClick={() => { setPublish(true) }}
+              >发布文章</Button>
               {
                 user && <UserAvatar user={user}></UserAvatar>
               }
             </Right>
           </Toolbar>
-
         </AppBar>
+        <PublishArticle open={openPublish} handleClose={() => { setPublish(false) }} />
       </ThemeProvider>
 
 

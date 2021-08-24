@@ -20,7 +20,7 @@ export const fetchDrafts: any = createAsyncThunk('drafts/fetchDrafts', async (cb
 })
 
 export const delDrafts: any = createAsyncThunk('drafts/delDrafts', async (param: any = {}) => {
-  const { errorCode: code, data } = await http('draft/delete', { data: param ,method:'post'});
+  const { errorCode: code, data } = await http('draft/delete', { data: param, method: 'post' });
   if (code === 0) {
     return param.id;
   } else {
@@ -52,7 +52,7 @@ const draftSlice = createSlice({
     },
     [delDrafts.fulfilled]: (state, action) => {
       state.status = 'succeeded'
-      state.drafts.splice(action, 1);
+      state.drafts.splice(state.drafts.findIndex((i: any) => i.id === action), 1);
     },
     [delDrafts.rejected]: (state, action) => {
       state.status = 'failed'
