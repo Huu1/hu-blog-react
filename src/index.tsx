@@ -6,6 +6,11 @@ import reportWebVitals from './reportWebVitals';
 import { AppProviders } from 'context';
 import { Provider } from 'react-redux';
 import store from "./store";
+import { fetchCategory } from 'store/feature/categorySlice';
+
+
+store.dispatch(fetchCategory())
+
 ReactDOM.render(
   // <React.StrictMode>
   <Provider store={store}>
@@ -16,7 +21,6 @@ ReactDOM.render(
   // </React.StrictMode>,
   document.getElementById("root")
 )
-
 
 
 // If you want to start measuring performance in your app, pass a function

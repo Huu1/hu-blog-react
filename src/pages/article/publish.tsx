@@ -14,6 +14,10 @@ import CloseIcon from '@material-ui/icons/Close';
 import Slide from '@material-ui/core/Slide';
 import { TransitionProps } from '@material-ui/core/transitions';
 import PublishStep from './PublishStep';
+import { useAsync } from 'utils/useAsync';
+import { http, useHttp } from 'utils/http';
+import { useSelector } from 'react-redux';
+import { selectCurrentDraft } from 'store/feature/draftSlice';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -38,6 +42,22 @@ export default function PublishArticle(props: { open: boolean, handleClose: () =
   const { open, handleClose } = props;
   const classes = useStyles();
 
+  const article = useSelector(selectCurrentDraft);
+
+
+  const publish = async (data: { category_id: number, description: string, seo_keyword: string }) => {
+    const { category_id, description, seo_keyword } = data;
+    const result = await http('article', {
+      method: 'post', data: {
+        ...article,
+        seo_keyword,
+        description: description || article.content.slice(0, 30),
+        category_id
+      }
+    })
+    console.log(result);
+  }
+
   return (
     <div>
       <Dialog open={open} onClose={handleClose} TransitionComponent={Transition}>
@@ -51,7 +71,7 @@ export default function PublishArticle(props: { open: boolean, handleClose: () =
             </Typography>
           </Toolbar>
         </AppBar>
-        <PublishStep />
+        <PublishStep publish={publish} />
       </Dialog>
     </div>
   );

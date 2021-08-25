@@ -16,6 +16,8 @@ import { useCallback } from "react";
 import { useDataApi } from "utils/useApi";
 import { createStyles, FormControl, InputLabel, makeStyles, MenuItem, Select, Theme } from "@material-ui/core";
 import DraftList from "./draft";
+import { useDispatch } from "react-redux";
+import { updateArticle } from "store/feature/draftSlice";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -62,7 +64,7 @@ export function Write() {
 
   const { run, isLoading } = useAsync();
   const client = useHttp();
-
+  const reduxDispatch = useDispatch()
   const classes = useStyles();
 
   // 初始化编辑器
@@ -115,6 +117,13 @@ export function Write() {
       firstUpdate.current = false;
       return;
     } else {
+      reduxDispatch(
+        updateArticle({
+          title: debounceTitle,
+          content: debounceContent,
+          id
+        })
+      )
       run(client('draft/edit', {
         method: 'post', data: {
           title: debounceTitle,

@@ -43,7 +43,7 @@ const theme = createTheme({
   },
 });
 
-export default function WriterTopBar(props: { title: string, onTitleChange: (value: string) => void, loading: boolean }) {
+export default function WriterTopBar(props: { title: string, onTitleChange: (value: string) => void, loading: boolean}) {
   const { title, onTitleChange, loading } = props;
   const classes = useStyles();
   const { user } = useAuth();

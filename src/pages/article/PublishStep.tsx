@@ -10,6 +10,8 @@ import Typography from '@material-ui/core/Typography';
 import { Chip, TextField } from '@material-ui/core';
 import FaceIcon from '@material-ui/icons/Face';
 import DoneIcon from '@material-ui/icons/Done';
+import { useSelector } from 'react-redux';
+import { selectAllCategory } from 'store/feature/categorySlice';
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     root: {
@@ -29,19 +31,24 @@ const useStyles = makeStyles((theme: Theme) =>
 );
 
 
+export default function PublishStep(props: { publish: any }) {
 
+  const { publish = () => { } } = props;
 
-
-export default function PublishStep() {
   const classes = useStyles();
   const [activeStep, setActiveStep] = React.useState(0);
-  const [checkIndex, setCheckIndex] = React.useState<number>(0);
+  const [checkIndex, setCheckIndex] = React.useState<number>(1);
   const [desc, setDesc] = React.useState<string>('');
   const [keyword, setKeyword] = React.useState<string>('');
   const steps = getSteps();
 
+  const categoryList = useSelector(selectAllCategory);
+
   const handleNext = () => {
     setActiveStep((prevActiveStep) => prevActiveStep + 1);
+    if (activeStep === 2) {
+      toPublish();
+    }
   };
 
   const handleBack = () => {
@@ -52,29 +59,35 @@ export default function PublishStep() {
     setActiveStep(0);
   };
 
+  const toPublish = () => {
+    publish({
+      description: desc,
+      category_id: checkIndex || 1,
+      seo_keyword: keyword || 'js'
+    })
+  }
+
   function checkTag() {
     return <div>
-      <Chip
-        label="JavaSrcipt"
-        clickable
-        color={checkIndex === 0 ? 'secondary' : 'primary'}
-        icon={<FaceIcon />}
-        onClick={() => { handleClick(0) }}
-        deleteIcon={<DoneIcon />}
-      />
-      <Chip
-        label="JavaSrcipt"
-        clickable
-        color={checkIndex === 1 ? 'secondary' : 'primary'}
-        icon={<FaceIcon />}
-        onClick={() => { handleClick(1) }}
-        deleteIcon={<DoneIcon />}
-      />
+      {
+        categoryList.map((c) =>
+          <Chip
+            key={c.id}
+            label={c.name}
+            clickable
+            color={checkIndex === c.id ? 'secondary' : 'primary'}
+            icon={<FaceIcon />}
+            onClick={() => { handleClick(c.id) }}
+            deleteIcon={<DoneIcon />}
+          />
+        )
+      }
+
     </div>
   }
 
   function checkKeyWord() {
-    return <TextField id="outlined-basic" label="Outlined" variant="outlined"  value={keyword} onChange={(e) => { setKeyword(e.target.value) }} />
+    return <TextField id="outlined-basic" label="Outlined" variant="outlined" value={keyword} onChange={(e) => { setKeyword(e.target.value) }} />
   }
 
   function setDescData() {
@@ -99,7 +112,11 @@ export default function PublishStep() {
   }
 
   function getSteps() {
-    return ['设置标签', '设置关键字', '简短描述'];
+    return ['设置标签', '设置关键字', '文章简短描述'];
+  }
+
+  function shoTagName(id: number) {
+    return categoryList.find(i => i.id === id)?.name;
   }
 
   function getStepData(index: number) {
@@ -107,13 +124,10 @@ export default function PublishStep() {
     let result;
     switch (index) {
       case 0:
-        result = checkIndex;
+        result = shoTagName(checkIndex);
         break;
       case 1:
         result = keyword;
-        break;
-      case 2:
-        result = desc;
         break;
       default:
         break;
@@ -126,7 +140,7 @@ export default function PublishStep() {
       <Stepper activeStep={activeStep} orientation="vertical" style={{ width: '500px' }}>
         {steps.map((label, index) => (
           <Step key={label}>
-            <StepLabel>{label + getStepData(index)}</StepLabel>
+            <StepLabel>{label + ' ' + getStepData(index)}</StepLabel>
             <StepContent>
               {getStepContent(index)}
               <div className={classes.actionsContainer}>
@@ -136,7 +150,7 @@ export default function PublishStep() {
                     onClick={handleBack}
                     className={classes.button}
                   >
-                    Back
+                    返回
                   </Button>
                   <Button
                     variant="contained"
@@ -144,7 +158,7 @@ export default function PublishStep() {
                     onClick={handleNext}
                     className={classes.button}
                   >
-                    {activeStep === steps.length - 1 ? 'Finish' : 'Next'}
+                    {activeStep === steps.length - 1 ? '发布' : '下一步'}
                   </Button>
                 </div>
               </div>
@@ -152,14 +166,6 @@ export default function PublishStep() {
           </Step>
         ))}
       </Stepper>
-      {/* {activeStep === steps.length && (
-        <Paper square elevation={0} className={classes.resetContainer}>
-          <Typography>All steps completed - you&apos;re finished</Typography>
-          <Button onClick={handleReset} className={classes.button}>
-            Reset
-          </Button>
-        </Paper>
-      )} */}
     </div>
   );
 }

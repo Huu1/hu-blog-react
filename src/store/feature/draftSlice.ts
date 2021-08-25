@@ -5,6 +5,11 @@ import { http, useHttp } from 'utils/http';
 
 const initialState = {
   drafts: [],
+  currentDraft: {
+    title: "",
+    content: '',
+    id:''
+  },
   status: 'idle',
   error: null
 }
@@ -32,7 +37,11 @@ const draftSlice = createSlice({
   name: 'drafts',
   initialState,
   reducers: {
-
+    updateArticle(state, action) {
+      state.currentDraft = {
+        ...action.payload
+      }
+    },
   },
   extraReducers: {
     [fetchDrafts.pending]: (state, action) => {
@@ -40,7 +49,6 @@ const draftSlice = createSlice({
     },
     [fetchDrafts.fulfilled]: (state, action) => {
       state.status = 'succeeded'
-      // Add any fetched posts to the array
       state.drafts = action.payload
     },
     [fetchDrafts.rejected]: (state, action) => {
@@ -61,6 +69,9 @@ const draftSlice = createSlice({
   }
 })
 
+export const { updateArticle } = draftSlice.actions;
+
 export default draftSlice.reducer
 
-export const selectAllDrafts = (state: { drafts: { drafts: any; }; }) => state.drafts.drafts
+export const selectAllDrafts = (state: { drafts: { drafts: any; }; }) => state.drafts.drafts;
+export const selectCurrentDraft = (state: { drafts: { currentDraft: any; }; }) => state.drafts.currentDraft;
